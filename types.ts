@@ -11,10 +11,12 @@ export interface Product {
 export enum Category {
   OfficeChairs = 'Office Chairs',
   Workstations = 'Workstations',
-  Sofas = 'Sofas',
+  Tables = 'Office Tables',
+  Sofas = 'Lounge & Sofas',
   Education = 'Education',
-  Home = 'Home Furniture',
-  Laboratory = 'Laboratory'
+  Healthcare = 'Healthcare',
+  Laboratory = 'Laboratory',
+  Home = 'Home Furniture'
 }
 
 export interface CartItem extends Product {

@@ -140,7 +140,7 @@ export const GemServicesPage: React.FC = () => {
                                 <div className="text-white/70">✉</div>
                                 <div>
                                     <p className="text-xs text-white/60 uppercase">Email</p>
-                                    <p className="font-bold">gem@modernamenities.com</p>
+                                    <p className="font-bold">info@modernamenities.in</p>
                                 </div>
                             </div>
                         </div>

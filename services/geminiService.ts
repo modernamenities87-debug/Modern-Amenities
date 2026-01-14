@@ -1,41 +1,29 @@
-import { GoogleGenAI, Chat } from "@google/genai";
 
-let chatSession: Chat | null = null;
-
-const getChatSession = () => {
-  if (chatSession) return chatSession;
-
-  try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    chatSession = ai.chats.create({
-      model: 'gemini-2.5-flash',
-      config: {
-        systemInstruction: `You are "AmenityBot", an expert interior design consultant for Modern Amenities. 
-        Your goal is to help customers find the perfect furniture for their office or home.
-        Be professional, polite, and knowledgeable about ergonomics, office layouts, and color coordination.
-        Suggest products like "Liberate Chair", "Genesis Workstation", or "Cloud Sofa" when relevant.
-        Keep answers concise (under 100 words) unless asked for details.
-        If asked about prices, give estimates in INR but suggest contacting a dealer for exact quotes.`,
-      },
-    });
-    return chatSession;
-  } catch (error) {
-    console.error("Error initializing Gemini Chat:", error);
-    return null;
-  }
-};
+import { GoogleGenAI } from "@google/genai";
 
 export const sendMessageToGemini = async (message: string): Promise<string> => {
-  const session = getChatSession();
-  if (!session) {
-    return "I'm currently having trouble connecting to my design database. Please try again later.";
-  }
-
   try {
-    const response = await session.sendMessage({ message });
-    return response.text || "I didn't catch that. Could you rephrase?";
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: message,
+      config: {
+        systemInstruction: `You are "AmenityBot", a world-class senior interior design and ergonomic expert for "Modern Amenities Furniture". 
+        
+        Guidelines:
+        1. Context: Modern Amenities is a leader in premium office and home furniture (similar to brands like Featherlite or Herman Miller).
+        2. Products: You recommend chairs (Liberate, Helix, Astro), workstations (Genesis, Perform), and tables (Elevate Sit-Stand, Vibe).
+        3. Expertise: Explain ergonomic features like "Synchro-tilt", "Lumbar Support", and "Dynaflex" to help users understand the value.
+        4. Tone: Professional, helpful, and sophisticated.
+        5. Language: Use English primarily, but understand Hinglish queries.
+        6. Limits: Keep responses concise (under 80 words).
+        7. Pricing: Give estimates in INR but always suggest contacting the sales team for bulk quotes.`,
+      },
+    });
+
+    return response.text || "I apologize, I'm having trouble retrieving that design advice. How else can I help you?";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "I encountered a technical glitch. Let's try that again.";
+    return "Our design server is currently resting. Please try again in a moment!";
   }
 };
